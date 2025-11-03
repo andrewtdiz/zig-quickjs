@@ -75,7 +75,7 @@ The C wrapper provides these functions:
 - `js_app_last_exception()` - Get error details
 - `js_app_call_global()` - Call global functions
 
-## Using the Library
+## Contributing
 
 ### From C/C++
 
