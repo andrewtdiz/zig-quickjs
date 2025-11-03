@@ -1,44 +1,69 @@
-zig-quickjs
+# zig-quickjs
 
-Overview
-- Minimal Zig build that compiles the QuickJS C sources as a static library.
-- Small C wrapper (`src/wrapper.h` / `src/wrapper.c`) exposing a simple runtime API, with a generated Zig binding (`src/quickjs.zig`).
+A minimal Zig libary for adding QuickJS as a static library. Supports Windows and Linux.
 
-Prerequisites
-- Zig 0.16.0 (or compatible dev build noted in `build.zig.zon`).
-- Git submodules checked out (the `quickjs/` directory).
+## Quick Start
 
-Getting Started
-- Fetch submodule: `git submodule update --init --recursive`
-- Build library: `zig build`
-- Output: `zig-out/lib/libquickjs.a`
+### Prerequisites
 
-Headers and Includes
-- QuickJS headers live under `quickjs/` (e.g., `quickjs/quickjs.h`).
-- When consuming the static lib from C/C++, add include path `-I quickjs` and link `zig-out/lib/libquickjs.a`.
+- Zig 0.16.0 (or compatible version in `build.zig.zon`)
+- Git (for submodule management)
 
-Wrapper API
-- Public header: `src/wrapper.h`
-- Implementation: `src/wrapper.c`
-- Provides:
-  - `js_app_new`, `js_app_free`
-  - `js_app_eval_file`, `js_app_eval_module_file`, `js_app_eval_code`
-  - `js_app_eval_prelude`, `js_app_eval_prelude_file`
-  - `js_app_run_loop`, `js_app_execute_jobs`
-  - `js_app_last_exception`
-  - `js_app_call_global`
+### Setup and Build
 
-Examples
-- `example/simple`: minimal command-line host that executes a script file and processes the QuickJS event loop.
-- `example/advanced`: richer demo showing prelude injection, timer aliases, and detailed exception handling.
+```bash
+git clone --recurse-submodules https://github.com/andrewtdiz/zig-quickjs
+cd zig-quickjs
+zig build
+```
 
-Regenerating the Zig Binding
-- The Zig binding (`src/quickjs.zig`) is generated from the C wrapper header via translate-c.
-- Update it after changing `src/wrapper.h`:
+Output: `zig-out/lib/libquickjs.a`
 
-  zig translate-c ./src/wrapper.h > ./src/quickjs.zig
+## Project Structure
 
-Notes
-- The current `build.zig` installs only the QuickJS static library. If you want the wrapper compiled and installed as a separate static lib, we can extend the build to produce and install `libzjs.a` and copy `src/wrapper.h` into `zig-out/include`.
-- The wrapper uses `quickjs-libc` helpers for convenience (module loader, std/OS modules). If you need a custom host environment without these helpers, the wrapper can be adapted accordingly.
-- Consumers can inject additional globals before running user scripts by calling `js_app_eval_prelude`/`js_app_eval_prelude_file` (see `example/demo.zig` for a quick alias of `setTimeout`/`setInterval`).
+### Core Files
+
+- **`src/wrapper.h`** / **`src/wrapper.c`** - Simple C API wrapper
+- **`src/root.zig`** - Main Zig module
+- **`quickjs/`** - QuickJS source (Git submodule)
+
+### Examples
+
+- **`example/simple/`** - Basic command-line host
+- **`example/advanced/`** - Demo with timers and prelude injection
+
+## Wrapper API
+
+The C wrapper provides these functions:
+
+- `js_app_new()`, `js_app_free()` - Create/destroy runtime
+- `js_app_eval_code()` - Execute JavaScript code
+- `js_app_eval_file()` - Execute JavaScript file
+- `js_app_eval_module_file()` - Execute as ES module
+- `js_app_eval_prelude()`, `js_app_eval_prelude_file()` - Inject setup code
+- `js_app_run_loop()` - Process event loop
+- `js_app_execute_jobs()` - Run pending jobs
+- `js_app_last_exception()` - Get error details
+- `js_app_call_global()` - Call global functions
+
+## Using the Library
+
+### From C/C++
+
+1. Include the header: `#include "wrapper.h"`
+2. Add include path: `-I quickjs`
+3. Link: `zig-out/lib/libquickjs.a`
+
+### Regenerating Zig Bindings
+
+After modifying `src/wrapper.h`, regenerate:
+
+```bash
+zig translate-c ./src/wrapper.h > ./src/quickjs.zig
+```
+
+## Notes
+
+- The wrapper uses `quickjs-libc` for built-in modules (std, OS)
+- Inject custom globals via `js_app_eval_prelude()` before running scripts
+- For custom environments, the wrapper can be adapted
