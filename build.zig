@@ -55,4 +55,29 @@ pub fn build(b: *std.Build) void {
 
     // Install the static library to zig-out/lib
     b.installArtifact(qjs_lib);
+
+    // Build a wrapper static library (libzjs.a) exposing js_app_* helpers
+    const wrapper_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+    });
+    wrapper_mod.addIncludePath(b.path("quickjs"));
+    wrapper_mod.addIncludePath(b.path("src"));
+    wrapper_mod.addCSourceFiles(.{
+        .files = &.{
+            "src/wrapper.c",
+        },
+        .flags = c_flags.items,
+    });
+    const wrapper_lib = b.addLibrary(.{
+        .name = "zig-quickjs",
+        .root_module = wrapper_mod,
+        .linkage = .static,
+    });
+    wrapper_lib.linkLibC();
+    wrapper_lib.linkLibrary(qjs_lib);
+    b.installArtifact(wrapper_lib);
+
+    // Make the C header available to dependents
+    b.installFile("src/wrapper.h", "include/wrapper.h");
 }

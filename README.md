@@ -17,7 +17,35 @@ cd zig-quickjs
 zig build
 ```
 
-Output: `zig-out/lib/libquickjs.a`
+Add as a dependency to `build.zig.zon`
+
+```zig
+.dependencies = .{
+    .quickjs = .{
+        .path = "./zig-quickjs", // Path to zig-quickjs
+    },
+},
+```
+
+In your `build.zig`, add the following:
+
+```diff
+--- build.zig
++++ build.zig
++ const dep = b.dependency("quickjs", .{});
++
+const root_mod = b.createModule(.{
+     .root_source_file = b.path("demo.zig"),
+     .target = target,
+     .optimize = optimize,
++    .imports = &.{
++         .{ .name = "quickjs", .module = dep.module("quickjs") },
++     },
+});
++
++ exe.linkLibrary(dep.artifact("zig-quickjs"));
++ exe.linkLibC();
+```
 
 ## Project Structure
 
@@ -26,6 +54,9 @@ Output: `zig-out/lib/libquickjs.a`
 - **`src/wrapper.h`** / **`src/wrapper.c`** - Simple C API wrapper
 - **`src/root.zig`** - Main Zig module
 - **`quickjs/`** - QuickJS source (Git submodule)
+- **`zig-out/lib/libquickjs.a`** - Vanilla QuickJS static library
+- **`zig-out/lib/libzjs.a`** - Wrapper static library (links `libquickjs`)
+- **`zig-out/include/wrapper.h`** - Installed wrapper header
 
 ### Examples
 
@@ -50,9 +81,9 @@ The C wrapper provides these functions:
 
 ### From C/C++
 
-1. Include the header: `#include "wrapper.h"`
-2. Add include path: `-I quickjs`
-3. Link: `zig-out/lib/libquickjs.a`
+1. Include the installed header: `#include "wrapper.h"`
+2. Add include paths: `-I zig-out/include` (and `-I quickjs` if you need the raw QuickJS headers)
+3. Link: `zig-out/lib/libzjs.a` (automatically pulls in `libquickjs.a`)
 
 ### Regenerating Zig Bindings
 

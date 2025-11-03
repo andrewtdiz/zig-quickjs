@@ -4,7 +4,7 @@
     .minimum_zig_version = "0.16.0-dev.747+493ad58ff",
     .paths = .{ "" },
     .dependencies = .{
-        .zig_quickjs = .{
+        .quickjs = .{
             .path = "../../",
         },
     },
