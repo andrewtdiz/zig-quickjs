@@ -30,8 +30,6 @@ Add as a dependency to `build.zig.zon`
 In your `build.zig`, add the following:
 
 ```diff
---- build.zig
-+++ build.zig
 + const dep = b.dependency("quickjs", .{});
 +
 const root_mod = b.createModule(.{
