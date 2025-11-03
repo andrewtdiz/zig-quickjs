@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
     // Import the Zig module from the parent package so @import("quickjs") resolves
     const dep = b.dependency("quickjs", .{});
     const root_mod = b.createModule(.{
-        .root_source_file = b.path("demo.zig"),
+        .root_source_file = b.path("./src/demo.zig"),
         .target = target,
         .optimize = optimize,
         .imports = &.{
@@ -28,6 +28,6 @@ pub fn build(b: *std.Build) void {
     // Optional: convenience run step 
     const run_step = b.step("run", "Run advanced example (pass script path after --)");
     const run_cmd = b.addRunArtifact(exe);
-    run_cmd.addArg(b.path("demo.js").getPath(b));
+    run_cmd.addArg(b.path("/src/demo.js").getPath(b));
     run_step.dependOn(&run_cmd.step);
 }
