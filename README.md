@@ -33,7 +33,7 @@ In your `build.zig`, add the following:
 + const dep = b.dependency("quickjs", .{});
 +
 const root_mod = b.createModule(.{
-     .root_source_file = b.path("demo.zig"),
+     .root_source_file = b.path("main.zig"),
      .target = target,
      .optimize = optimize,
 +    .imports = &.{
