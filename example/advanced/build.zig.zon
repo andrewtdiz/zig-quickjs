@@ -1,0 +1,12 @@
+.{
+    .name = .example,
+    .version = "0.0.1",
+    .minimum_zig_version = "0.16.0-dev.747+493ad58ff",
+    .paths = .{""},
+    .dependencies = .{
+        .zig_quickjs = .{
+            .path = "../../",
+        },
+    },
+    .fingerprint = 0x6eec9b9f0e478cba,
+}

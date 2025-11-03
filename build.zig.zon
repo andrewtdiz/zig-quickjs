@@ -1,0 +1,16 @@
+.{
+    .name = .zig_quickjs,
+    .version = "0.0.0",
+    .fingerprint = 0x502114703afccdb0,
+    .minimum_zig_version = "0.16.0-dev.747+493ad58ff",
+    .dependencies = .{
+        .quickjs = .{
+            .path = "./quickjs",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
