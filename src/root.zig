@@ -5,6 +5,7 @@ pub const JSRuntime = quickjs_raw.JSRuntime;
 pub const JSContext = quickjs_raw.JSContext;
 pub const JSValue = quickjs_raw.JSValue;
 pub const JSValueConst = quickjs_raw.JSValueConst;
+pub const JSCFunction = quickjs_raw.JSCFunction;
 
 pub inline fn js_app_new(width: c_int, height: c_int) ?*js_app {
     return quickjs_raw.js_app_new(width, height);
@@ -70,6 +71,34 @@ pub inline fn JS_IsFunction(ctx: *JSContext, value: JSValueConst) bool {
     return quickjs_raw.zjs_is_function(ctx, value);
 }
 
+pub inline fn JS_IsObject(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_object(value);
+}
+
+pub inline fn JS_IsUndefined(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_undefined(value);
+}
+
+pub inline fn JS_IsNull(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_null(value);
+}
+
+pub inline fn JS_IsNumber(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_number(value);
+}
+
+pub inline fn JS_IsString(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_string(value);
+}
+
+pub inline fn JS_IsBool(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_bool(value);
+}
+
+pub inline fn JS_IsArray(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_array(value);
+}
+
 pub inline fn JS_NewObject(ctx: *JSContext) JSValue {
     return quickjs_raw.zjs_new_object(ctx);
 }
@@ -104,6 +133,14 @@ pub inline fn JS_NewStringLen(ctx: *JSContext, data: [*c]const u8, len: usize) J
 
 pub inline fn JS_FreeValue(ctx: *JSContext, value: JSValue) void {
     quickjs_raw.zjs_free_value(ctx, value);
+}
+
+pub inline fn JS_NewCFunction(ctx: *JSContext, func: *const JSCFunction, name: [*c]const u8, length: c_int) JSValue {
+    return quickjs_raw.zjs_new_c_function(ctx, func, name, length);
+}
+
+pub inline fn JS_GetUndefined() JSValue {
+    return quickjs_raw.zjs_make_undefined();
 }
 
 pub inline fn asValueConst(value: JSValue) JSValueConst {

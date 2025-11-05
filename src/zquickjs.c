@@ -18,6 +18,34 @@ bool zjs_is_function(JSContext *ctx, JSValueConst value) {
     return JS_IsFunction(ctx, value);
 }
 
+bool zjs_is_object(JSValueConst value) {
+    return JS_IsObject(value);
+}
+
+bool zjs_is_undefined(JSValueConst value) {
+    return JS_IsUndefined(value);
+}
+
+bool zjs_is_null(JSValueConst value) {
+    return JS_IsNull(value);
+}
+
+bool zjs_is_number(JSValueConst value) {
+    return JS_IsNumber(value);
+}
+
+bool zjs_is_string(JSValueConst value) {
+    return JS_IsString(value);
+}
+
+bool zjs_is_bool(JSValueConst value) {
+    return JS_IsBool(value);
+}
+
+bool zjs_is_array(JSValueConst value) {
+    return JS_IsArray(value);
+}
+
 JSValue zjs_new_object(JSContext *ctx) {
     return JS_NewObject(ctx);
 }
@@ -52,4 +80,12 @@ int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value) {
 
 void zjs_free_value(JSContext *ctx, JSValue value) {
     JS_FreeValue(ctx, value);
+}
+
+JSValue zjs_new_c_function(JSContext *ctx, JSCFunction *func, const char *name, int length) {
+    return JS_NewCFunction(ctx, func, name, length);
+}
+
+JSValue zjs_make_undefined(void) {
+    return JS_UNDEFINED;
 }

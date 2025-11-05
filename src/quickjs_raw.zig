@@ -15,6 +15,7 @@ pub const JSValue = extern struct {
 };
 
 pub const JSValueConst = JSValue;
+pub const JSCFunction = fn (*JSContext, JSValueConst, c_int, [*c]JSValueConst) callconv(.c) JSValue;
 
 pub extern "c" fn js_app_new(width: c_int, height: c_int) ?*js_app;
 pub extern "c" fn js_app_free(app: ?*js_app) void;
@@ -33,6 +34,13 @@ pub extern "c" fn zjs_get_global_object(ctx: *JSContext) JSValue;
 pub extern "c" fn zjs_get_property_str(ctx: *JSContext, obj: JSValueConst, prop: [*c]const u8) JSValue;
 pub extern "c" fn zjs_is_exception(value: JSValueConst) bool;
 pub extern "c" fn zjs_is_function(ctx: *JSContext, value: JSValueConst) bool;
+pub extern "c" fn zjs_is_object(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_undefined(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_null(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_number(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_string(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_bool(value: JSValueConst) bool;
+pub extern "c" fn zjs_is_array(value: JSValueConst) bool;
 pub extern "c" fn zjs_new_object(ctx: *JSContext) JSValue;
 pub extern "c" fn zjs_new_float64(ctx: *JSContext, value: f64) JSValue;
 pub extern "c" fn zjs_new_int32(ctx: *JSContext, value: i32) JSValue;
@@ -42,3 +50,5 @@ pub extern "c" fn zjs_set_property_str(ctx: *JSContext, obj: JSValueConst, prop:
 pub extern "c" fn zjs_call(ctx: *JSContext, func: JSValueConst, this_obj: JSValueConst, argc: c_int, argv: [*c]JSValueConst) JSValue;
 pub extern "c" fn zjs_to_float64(ctx: *JSContext, out_value: *f64, value: JSValueConst) c_int;
 pub extern "c" fn zjs_free_value(ctx: *JSContext, value: JSValue) void;
+pub extern "c" fn zjs_new_c_function(ctx: *JSContext, func: *const JSCFunction, name: [*c]const u8, length: c_int) JSValue;
+pub extern "c" fn zjs_make_undefined() JSValue;
