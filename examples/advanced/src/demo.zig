@@ -15,7 +15,7 @@ fn printJsException(app: *quickjs.js_app) void {
         const end = std.mem.indexOfScalar(u8, slice, 0) orelse slice.len;
         std.debug.print("JS exception: {s}\n", .{slice[0..end]});
     } else {
-        std.debug.print("JS exception (unavailable)\n", .{});
+        std.debug.print("JS exception (already reported)\n", .{});
     }
 }
 
@@ -60,5 +60,50 @@ pub fn main() AppError!void {
         return AppError.ScriptFailed;
     }
 
-    quickjs.js_app_run_loop(app);
+    const greet_symbol: [:0]const u8 = "greetFromJs";
+    const name_arg: [:0]const u8 = "Zig Runner";
+    var args = [_][*c]const u8{@ptrCast(name_arg.ptr)};
+    var greet_out: [256]u8 = undefined;
+    const greet_status = quickjs.js_app_call_global(
+        app,
+        @ptrCast(greet_symbol.ptr),
+        @ptrCast(&args),
+        @intCast(args.len),
+        @ptrCast(greet_out[0..].ptr),
+        greet_out.len,
+    );
+    if (greet_status == 0) {
+        const greet_slice = greet_out[0..];
+        const greet_end = std.mem.indexOfScalar(u8, greet_slice, 0) orelse greet_slice.len;
+        std.debug.print("greetFromJs returned: {s}\n", .{greet_slice[0..greet_end]});
+    } else {
+        std.debug.print("greetFromJs call failed\n", .{});
+        printJsException(app);
+    }
+
+    const faulty_symbol: [:0]const u8 = "faultyAccessor";
+    var unused: [1]u8 = .{0};
+    const faulty_status = quickjs.js_app_call_global(
+        app,
+        @ptrCast(faulty_symbol.ptr),
+        @ptrFromInt(0),
+        0,
+        @ptrCast(unused[0..].ptr),
+        unused.len,
+    );
+    if (faulty_status != 0) {
+        std.debug.print("faultyAccessor threw as expected\n", .{});
+        printJsException(app);
+    } else {
+        std.debug.print("faultyAccessor unexpectedly succeeded\n", .{});
+    }
+
+    std.debug.print("Pumping pending jobs...\n", .{});
+    const executed = quickjs.js_app_execute_jobs(app, 8);
+    if (executed >= 0) {
+        std.debug.print("Executed {d} pending jobs\n", .{executed});
+    } else {
+        std.debug.print("Encountered error while executing jobs\n", .{});
+        printJsException(app);
+    }
 }

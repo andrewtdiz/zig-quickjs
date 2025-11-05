@@ -1,6 +1,7 @@
 #include "wrapper.h"
 #include "quickjs.h"
 #include "quickjs-libc.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -159,11 +160,17 @@ void js_app_run_loop(js_app* app) {
 
 int js_app_execute_jobs(js_app* app, int max_jobs) {
     if (!app) return -1;
-    JSContext* ctx = NULL;
+    JSRuntime* rt = JS_GetRuntime(app->ctx);
+    JSContext* job_ctx = NULL;
     int executed = 0;
     for (;;) {
-        int ret = JS_ExecutePendingJob(JS_GetRuntime(app->ctx), &ctx);
-        if (ret <= 0) break; // 0 = queue empty, <0 = error
+        int ret = JS_ExecutePendingJob(rt, &job_ctx);
+        if (ret < 0) {
+            JSContext* ctx = job_ctx ? job_ctx : app->ctx;
+            js_std_dump_error(ctx);
+            return -1;
+        }
+        if (ret == 0) break; // queue empty
         executed += ret;
         if (max_jobs > 0 && executed >= max_jobs) break;
     }
@@ -190,16 +197,22 @@ int js_app_call_global(js_app* app,
                        size_t out_buf_len) {
     if (!app || !func_name) return -1;
     JSContext* ctx = app->ctx;
+    int status = -1;
     JSValue global = JS_GetGlobalObject(ctx);
     JSValue fn = JS_GetPropertyStr(ctx, global, func_name);
+    if (JS_IsException(fn)) {
+        js_std_dump_error(ctx);
+        JS_FreeValue(ctx, global);
+        return -1;
+    }
     if (!JS_IsFunction(ctx, fn)) {
         JS_FreeValue(ctx, fn);
         JS_FreeValue(ctx, global);
         return -1;
     }
-    // Prepare arguments as JS strings
     JSValue args_storage[16];
     JSValue* args = args_storage;
+    bool args_on_heap = false;
     if (argc > (int)(sizeof(args_storage)/sizeof(args_storage[0]))) {
         args = (JSValue*)js_malloc(ctx, sizeof(JSValue) * (size_t)argc);
         if (!args) {
@@ -207,29 +220,35 @@ int js_app_call_global(js_app* app,
             JS_FreeValue(ctx, global);
             return -1;
         }
+        args_on_heap = true;
+    }
+    for (int i = 0; i < argc; ++i) {
+        args[i] = JS_UNDEFINED;
     }
     for (int i = 0; i < argc; ++i) {
         const char* s = argv ? argv[i] : NULL;
-        args[i] = s ? JS_NewString(ctx, s) : JS_UNDEFINED;
+        if (!s) {
+            args[i] = JS_UNDEFINED;
+            continue;
+        }
+        JSValue str = JS_NewString(ctx, s);
+        if (JS_IsException(str)) {
+            js_std_dump_error(ctx);
+            goto cleanup;
+        }
+        args[i] = str;
     }
     JSValue ret = JS_Call(ctx, fn, global, argc, args);
-    for (int i = 0; i < argc; ++i) {
-        if (!JS_IsUndefined(args[i])) JS_FreeValue(ctx, args[i]);
-    }
-    if (args != args_storage) js_free(ctx, args);
-    JS_FreeValue(ctx, fn);
-    JS_FreeValue(ctx, global);
-
     if (JS_IsException(ret)) {
+        js_std_dump_error(ctx);
         JS_FreeValue(ctx, ret);
-        return -1;
+        goto cleanup;
     }
-    // Convert result to string
     size_t len = 0;
     const char* cstr = JS_ToCStringLen(ctx, &len, ret);
     if (!cstr) {
         JS_FreeValue(ctx, ret);
-        return -1;
+        goto cleanup;
     }
     if (out_buf && out_buf_len > 0) {
         size_t copy_len = len < (out_buf_len - 1) ? len : (out_buf_len - 1);
@@ -238,7 +257,20 @@ int js_app_call_global(js_app* app,
     }
     JS_FreeCString(ctx, cstr);
     JS_FreeValue(ctx, ret);
-    return 0;
+    status = 0;
+
+cleanup:
+    for (int i = 0; i < argc; ++i) {
+        if (!JS_IsUndefined(args[i])) {
+            JS_FreeValue(ctx, args[i]);
+        }
+    }
+    if (args_on_heap) {
+        js_free(ctx, args);
+    }
+    JS_FreeValue(ctx, fn);
+    JS_FreeValue(ctx, global);
+    return status;
 }
 
 void* js_app_get_context(js_app* app) {

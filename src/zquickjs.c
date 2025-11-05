@@ -26,6 +26,18 @@ JSValue zjs_new_float64(JSContext *ctx, double value) {
     return JS_NewFloat64(ctx, value);
 }
 
+JSValue zjs_new_int32(JSContext *ctx, int32_t value) {
+    return JS_NewInt32(ctx, value);
+}
+
+JSValue zjs_new_bool(JSContext *ctx, bool value) {
+    return JS_NewBool(ctx, value);
+}
+
+JSValue zjs_new_string_len(JSContext *ctx, const char *data, size_t len) {
+    return JS_NewStringLen(ctx, data, len);
+}
+
 int zjs_set_property_str(JSContext *ctx, JSValueConst obj, const char *prop, JSValue value) {
     return JS_SetPropertyStr(ctx, obj, prop, value);
 }

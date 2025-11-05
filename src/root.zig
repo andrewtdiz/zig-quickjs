@@ -90,6 +90,18 @@ pub inline fn JS_ToFloat64(ctx: *JSContext, out_value: *f64, value: JSValueConst
     return quickjs_raw.zjs_to_float64(ctx, out_value, value);
 }
 
+pub inline fn JS_NewInt32(ctx: *JSContext, value: i32) JSValue {
+    return quickjs_raw.zjs_new_int32(ctx, value);
+}
+
+pub inline fn JS_NewBool(ctx: *JSContext, value: bool) JSValue {
+    return quickjs_raw.zjs_new_bool(ctx, value);
+}
+
+pub inline fn JS_NewStringLen(ctx: *JSContext, data: [*c]const u8, len: usize) JSValue {
+    return quickjs_raw.zjs_new_string_len(ctx, data, len);
+}
+
 pub inline fn JS_FreeValue(ctx: *JSContext, value: JSValue) void {
     quickjs_raw.zjs_free_value(ctx, value);
 }

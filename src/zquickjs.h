@@ -17,6 +17,9 @@ JSValue zjs_new_object(JSContext *ctx);
 JSValue zjs_new_float64(JSContext *ctx, double value);
 int zjs_set_property_str(JSContext *ctx, JSValueConst obj, const char *prop, JSValue value);
 JSValue zjs_call(JSContext *ctx, JSValueConst func, JSValueConst this_obj, int argc, JSValueConst *argv);
+JSValue zjs_new_int32(JSContext *ctx, int32_t value);
+JSValue zjs_new_bool(JSContext *ctx, bool value);
+JSValue zjs_new_string_len(JSContext *ctx, const char *data, size_t len);
 int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value);
 void zjs_free_value(JSContext *ctx, JSValue value);
 
