@@ -1,387 +1,99 @@
-pub const __builtin = @import("std").zig.c_translation.builtins;
-pub const __helpers = @import("std").zig.c_translation.helpers;
+const quickjs_raw = @import("quickjs_raw.zig");
 
-pub const ptrdiff_t = c_long;
-pub const wchar_t = c_int;
-pub const max_align_t = extern struct {
-    __aro_max_align_ll: c_longlong = 0,
-    __aro_max_align_ld: c_longdouble = 0,
-};
-pub const struct_js_app = opaque {
-    pub const free = js_app_free;
-    pub const file = js_app_eval_file;
-    pub const file1 = js_app_eval_module_file;
-    pub const code = js_app_eval_code;
-    pub const prelude = js_app_eval_prelude;
-    pub const file2 = js_app_eval_prelude_file;
-    pub const loop = js_app_run_loop;
-    pub const jobs = js_app_execute_jobs;
-    pub const exception = js_app_last_exception;
-    pub const global = js_app_call_global;
-};
-pub const js_app = struct_js_app;
-pub extern fn js_app_new(width: c_int, height: c_int) ?*js_app;
-pub extern fn js_app_free(app: ?*js_app) void;
-pub extern fn js_app_eval_file(app: ?*js_app, path: [*c]const u8) c_int;
-pub extern fn js_app_eval_module_file(app: ?*js_app, path: [*c]const u8) c_int;
-pub extern fn js_app_eval_code(app: ?*js_app, code: [*c]const u8, filename: [*c]const u8, is_module: c_int) c_int;
-pub extern fn js_app_eval_prelude(app: ?*js_app, code: [*c]const u8, filename: [*c]const u8, is_module: c_int) c_int;
-pub extern fn js_app_eval_prelude_file(app: ?*js_app, path: [*c]const u8, is_module: c_int) c_int;
-pub extern fn js_app_run_loop(app: ?*js_app) void;
-pub extern fn js_app_execute_jobs(app: ?*js_app, max_jobs: c_int) c_int;
-pub extern fn js_app_last_exception(app: ?*js_app, out_buf: [*c]u8, out_buf_len: usize) c_int;
-pub extern fn js_app_call_global(app: ?*js_app, func_name: [*c]const u8, argv: [*c]const [*c]const u8, argc: c_int, out_buf: [*c]u8, out_buf_len: usize) c_int;
+pub const js_app = quickjs_raw.js_app;
+pub const JSRuntime = quickjs_raw.JSRuntime;
+pub const JSContext = quickjs_raw.JSContext;
+pub const JSValue = quickjs_raw.JSValue;
+pub const JSValueConst = quickjs_raw.JSValueConst;
 
-pub const __VERSION__ = "Aro aro-zig";
-pub const __Aro__ = "";
-pub const __STDC__ = @as(c_int, 1);
-pub const __STDC_HOSTED__ = @as(c_int, 1);
-pub const __STDC_UTF_16__ = @as(c_int, 1);
-pub const __STDC_UTF_32__ = @as(c_int, 1);
-pub const __STDC_EMBED_NOT_FOUND__ = @as(c_int, 0);
-pub const __STDC_EMBED_FOUND__ = @as(c_int, 1);
-pub const __STDC_EMBED_EMPTY__ = @as(c_int, 2);
-pub const __STDC_VERSION__ = @as(c_long, 201710);
-pub const __GNUC__ = @as(c_int, 7);
-pub const __GNUC_MINOR__ = @as(c_int, 1);
-pub const __GNUC_PATCHLEVEL__ = @as(c_int, 0);
-pub const __ARO_EMULATE_CLANG__ = @as(c_int, 1);
-pub const __ARO_EMULATE_GCC__ = @as(c_int, 2);
-pub const __ARO_EMULATE_MSVC__ = @as(c_int, 3);
-pub const __ARO_EMULATE__ = __ARO_EMULATE_GCC__;
-pub const linux = @as(c_int, 1);
-pub const __linux = @as(c_int, 1);
-pub const __linux__ = @as(c_int, 1);
-pub const unix = @as(c_int, 1);
-pub const __unix = @as(c_int, 1);
-pub const __unix__ = @as(c_int, 1);
-pub const __code_model_small__ = @as(c_int, 1);
-pub const __amd64__ = @as(c_int, 1);
-pub const __amd64 = @as(c_int, 1);
-pub const __x86_64__ = @as(c_int, 1);
-pub const __x86_64 = @as(c_int, 1);
-pub const __SEG_GS = @as(c_int, 1);
-pub const __SEG_FS = @as(c_int, 1);
-pub const __seg_gs = @compileError("unable to translate macro: undefined identifier `address_space`"); // <builtin>:31:9
-pub const __seg_fs = @compileError("unable to translate macro: undefined identifier `address_space`"); // <builtin>:32:9
-pub const __LAHF_SAHF__ = @as(c_int, 1);
-pub const __AES__ = @as(c_int, 1);
-pub const __VAES__ = @as(c_int, 1);
-pub const __PCLMUL__ = @as(c_int, 1);
-pub const __VPCLMULQDQ__ = @as(c_int, 1);
-pub const __LZCNT__ = @as(c_int, 1);
-pub const __RDRND__ = @as(c_int, 1);
-pub const __FSGSBASE__ = @as(c_int, 1);
-pub const __BMI__ = @as(c_int, 1);
-pub const __BMI2__ = @as(c_int, 1);
-pub const __POPCNT__ = @as(c_int, 1);
-pub const __PRFCHW__ = @as(c_int, 1);
-pub const __RDSEED__ = @as(c_int, 1);
-pub const __ADX__ = @as(c_int, 1);
-pub const __MOVBE__ = @as(c_int, 1);
-pub const __FMA__ = @as(c_int, 1);
-pub const __F16C__ = @as(c_int, 1);
-pub const __GFNI__ = @as(c_int, 1);
-pub const __SHA__ = @as(c_int, 1);
-pub const __FXSR__ = @as(c_int, 1);
-pub const __XSAVE__ = @as(c_int, 1);
-pub const __XSAVEOPT__ = @as(c_int, 1);
-pub const __XSAVEC__ = @as(c_int, 1);
-pub const __XSAVES__ = @as(c_int, 1);
-pub const __CLFLUSHOPT__ = @as(c_int, 1);
-pub const __CLWB__ = @as(c_int, 1);
-pub const __SHSTK__ = @as(c_int, 1);
-pub const __RDPID__ = @as(c_int, 1);
-pub const __WAITPKG__ = @as(c_int, 1);
-pub const __MOVDIRI__ = @as(c_int, 1);
-pub const __MOVDIR64B__ = @as(c_int, 1);
-pub const __INVPCID__ = @as(c_int, 1);
-pub const __AVXVNNI__ = @as(c_int, 1);
-pub const __SERIALIZE__ = @as(c_int, 1);
-pub const __CRC32__ = @as(c_int, 1);
-pub const __AVX2__ = @as(c_int, 1);
-pub const __AVX__ = @as(c_int, 1);
-pub const __SSE4_2__ = @as(c_int, 1);
-pub const __SSE4_1__ = @as(c_int, 1);
-pub const __SSSE3__ = @as(c_int, 1);
-pub const __SSE3__ = @as(c_int, 1);
-pub const __SSE2__ = @as(c_int, 1);
-pub const __SSE__ = @as(c_int, 1);
-pub const __SSE_MATH__ = @as(c_int, 1);
-pub const __MMX__ = @as(c_int, 1);
-pub const __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 = @as(c_int, 1);
-pub const __SIZEOF_FLOAT128__ = @as(c_int, 16);
-pub const __FLOAT128__ = @as(c_int, 1);
-pub const __ORDER_LITTLE_ENDIAN__ = @as(c_int, 1234);
-pub const __ORDER_BIG_ENDIAN__ = @as(c_int, 4321);
-pub const __ORDER_PDP_ENDIAN__ = @as(c_int, 3412);
-pub const __BYTE_ORDER__ = __ORDER_LITTLE_ENDIAN__;
-pub const __LITTLE_ENDIAN__ = @as(c_int, 1);
-pub const __ELF__ = @as(c_int, 1);
-pub const __ATOMIC_RELAXED = @as(c_int, 0);
-pub const __ATOMIC_CONSUME = @as(c_int, 1);
-pub const __ATOMIC_ACQUIRE = @as(c_int, 2);
-pub const __ATOMIC_RELEASE = @as(c_int, 3);
-pub const __ATOMIC_ACQ_REL = @as(c_int, 4);
-pub const __ATOMIC_SEQ_CST = @as(c_int, 5);
-pub const __ATOMIC_BOOL_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_CHAR_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_CHAR16_T_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_CHAR32_T_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_WCHAR_T_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_SHORT_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_INT_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_LONG_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_LLONG_LOCK_FREE = @as(c_int, 1);
-pub const __ATOMIC_POINTER_LOCK_FREE = @as(c_int, 1);
-pub const __CHAR_BIT__ = @as(c_int, 8);
-pub const __BOOL_WIDTH__ = @as(c_int, 8);
-pub const __SCHAR_MAX__ = @as(c_int, 127);
-pub const __SCHAR_WIDTH__ = @as(c_int, 8);
-pub const __SHRT_MAX__ = @as(c_int, 32767);
-pub const __SHRT_WIDTH__ = @as(c_int, 16);
-pub const __INT_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __INT_WIDTH__ = @as(c_int, 32);
-pub const __LONG_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __LONG_WIDTH__ = @as(c_int, 64);
-pub const __LONG_LONG_MAX__ = @as(c_longlong, 9223372036854775807);
-pub const __LONG_LONG_WIDTH__ = @as(c_int, 64);
-pub const __WCHAR_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __WCHAR_WIDTH__ = @as(c_int, 32);
-pub const __INTMAX_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __INTMAX_WIDTH__ = @as(c_int, 64);
-pub const __SIZE_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const __SIZE_WIDTH__ = @as(c_int, 64);
-pub const __UINTMAX_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const __UINTMAX_WIDTH__ = @as(c_int, 64);
-pub const __PTRDIFF_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __PTRDIFF_WIDTH__ = @as(c_int, 64);
-pub const __INTPTR_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __INTPTR_WIDTH__ = @as(c_int, 64);
-pub const __UINTPTR_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const __UINTPTR_WIDTH__ = @as(c_int, 64);
-pub const __SIG_ATOMIC_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __SIG_ATOMIC_WIDTH__ = @as(c_int, 32);
-pub const __BITINT_MAXWIDTH__ = __helpers.promoteIntLiteral(c_int, 65535, .decimal);
-pub const __SIZEOF_FLOAT__ = @as(c_int, 4);
-pub const __SIZEOF_DOUBLE__ = @as(c_int, 8);
-pub const __SIZEOF_LONG_DOUBLE__ = @as(c_int, 10);
-pub const __SIZEOF_SHORT__ = @as(c_int, 2);
-pub const __SIZEOF_INT__ = @as(c_int, 4);
-pub const __SIZEOF_LONG__ = @as(c_int, 8);
-pub const __SIZEOF_LONG_LONG__ = @as(c_int, 8);
-pub const __SIZEOF_POINTER__ = @as(c_int, 8);
-pub const __SIZEOF_PTRDIFF_T__ = @as(c_int, 8);
-pub const __SIZEOF_SIZE_T__ = @as(c_int, 8);
-pub const __SIZEOF_WCHAR_T__ = @as(c_int, 4);
-pub const __SIZEOF_INT128__ = @as(c_int, 16);
-pub const __INTPTR_TYPE__ = c_long;
-pub const __UINTPTR_TYPE__ = c_ulong;
-pub const __INTMAX_TYPE__ = c_long;
-pub const __INTMAX_C_SUFFIX__ = @compileError("unable to translate macro: undefined identifier `L`"); // <builtin>:148:9
-pub const __UINTMAX_TYPE__ = c_ulong;
-pub const __UINTMAX_C_SUFFIX__ = @compileError("unable to translate macro: undefined identifier `UL`"); // <builtin>:150:9
-pub const __PTRDIFF_TYPE__ = c_long;
-pub const __SIZE_TYPE__ = c_ulong;
-pub const __WCHAR_TYPE__ = c_int;
-pub const __CHAR16_TYPE__ = c_ushort;
-pub const __CHAR32_TYPE__ = c_uint;
-pub const __INT8_TYPE__ = i8;
-pub const __INT8_FMTd__ = "hhd";
-pub const __INT8_FMTi__ = "hhi";
-pub const __INT8_C_SUFFIX__ = "";
-pub const __INT16_TYPE__ = c_short;
-pub const __INT16_FMTd__ = "hd";
-pub const __INT16_FMTi__ = "hi";
-pub const __INT16_C_SUFFIX__ = "";
-pub const __INT32_TYPE__ = c_int;
-pub const __INT32_FMTd__ = "d";
-pub const __INT32_FMTi__ = "i";
-pub const __INT32_C_SUFFIX__ = "";
-pub const __INT64_TYPE__ = c_long;
-pub const __INT64_FMTd__ = "ld";
-pub const __INT64_FMTi__ = "li";
-pub const __INT64_C_SUFFIX__ = @compileError("unable to translate macro: undefined identifier `L`"); // <builtin>:171:9
-pub const __UINT8_TYPE__ = u8;
-pub const __UINT8_FMTo__ = "hho";
-pub const __UINT8_FMTu__ = "hhu";
-pub const __UINT8_FMTx__ = "hhx";
-pub const __UINT8_FMTX__ = "hhX";
-pub const __UINT8_C_SUFFIX__ = "";
-pub const __UINT8_MAX__ = @as(c_int, 255);
-pub const __INT8_MAX__ = @as(c_int, 127);
-pub const __UINT16_TYPE__ = c_ushort;
-pub const __UINT16_FMTo__ = "ho";
-pub const __UINT16_FMTu__ = "hu";
-pub const __UINT16_FMTx__ = "hx";
-pub const __UINT16_FMTX__ = "hX";
-pub const __UINT16_C_SUFFIX__ = "";
-pub const __UINT16_MAX__ = __helpers.promoteIntLiteral(c_int, 65535, .decimal);
-pub const __INT16_MAX__ = @as(c_int, 32767);
-pub const __UINT32_TYPE__ = c_uint;
-pub const __UINT32_FMTo__ = "o";
-pub const __UINT32_FMTu__ = "u";
-pub const __UINT32_FMTx__ = "x";
-pub const __UINT32_FMTX__ = "X";
-pub const __UINT32_C_SUFFIX__ = @compileError("unable to translate macro: undefined identifier `U`"); // <builtin>:193:9
-pub const __UINT32_MAX__ = __helpers.promoteIntLiteral(c_uint, 4294967295, .decimal);
-pub const __INT32_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __UINT64_TYPE__ = c_ulong;
-pub const __UINT64_FMTo__ = "lo";
-pub const __UINT64_FMTu__ = "lu";
-pub const __UINT64_FMTx__ = "lx";
-pub const __UINT64_FMTX__ = "lX";
-pub const __UINT64_C_SUFFIX__ = @compileError("unable to translate macro: undefined identifier `UL`"); // <builtin>:201:9
-pub const __UINT64_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const __INT64_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __INT_LEAST8_TYPE__ = i8;
-pub const __INT_LEAST8_MAX__ = @as(c_int, 127);
-pub const __INT_LEAST8_WIDTH__ = @as(c_int, 8);
-pub const INT_LEAST8_FMTd__ = "hhd";
-pub const INT_LEAST8_FMTi__ = "hhi";
-pub const __UINT_LEAST8_TYPE__ = u8;
-pub const __UINT_LEAST8_MAX__ = @as(c_int, 255);
-pub const UINT_LEAST8_FMTo__ = "hho";
-pub const UINT_LEAST8_FMTu__ = "hhu";
-pub const UINT_LEAST8_FMTx__ = "hhx";
-pub const UINT_LEAST8_FMTX__ = "hhX";
-pub const __INT_FAST8_TYPE__ = i8;
-pub const __INT_FAST8_MAX__ = @as(c_int, 127);
-pub const __INT_FAST8_WIDTH__ = @as(c_int, 8);
-pub const INT_FAST8_FMTd__ = "hhd";
-pub const INT_FAST8_FMTi__ = "hhi";
-pub const __UINT_FAST8_TYPE__ = u8;
-pub const __UINT_FAST8_MAX__ = @as(c_int, 255);
-pub const UINT_FAST8_FMTo__ = "hho";
-pub const UINT_FAST8_FMTu__ = "hhu";
-pub const UINT_FAST8_FMTx__ = "hhx";
-pub const UINT_FAST8_FMTX__ = "hhX";
-pub const __INT_LEAST16_TYPE__ = c_short;
-pub const __INT_LEAST16_MAX__ = @as(c_int, 32767);
-pub const __INT_LEAST16_WIDTH__ = @as(c_int, 16);
-pub const INT_LEAST16_FMTd__ = "hd";
-pub const INT_LEAST16_FMTi__ = "hi";
-pub const __UINT_LEAST16_TYPE__ = c_ushort;
-pub const __UINT_LEAST16_MAX__ = __helpers.promoteIntLiteral(c_int, 65535, .decimal);
-pub const UINT_LEAST16_FMTo__ = "ho";
-pub const UINT_LEAST16_FMTu__ = "hu";
-pub const UINT_LEAST16_FMTx__ = "hx";
-pub const UINT_LEAST16_FMTX__ = "hX";
-pub const __INT_FAST16_TYPE__ = c_short;
-pub const __INT_FAST16_MAX__ = @as(c_int, 32767);
-pub const __INT_FAST16_WIDTH__ = @as(c_int, 16);
-pub const INT_FAST16_FMTd__ = "hd";
-pub const INT_FAST16_FMTi__ = "hi";
-pub const __UINT_FAST16_TYPE__ = c_ushort;
-pub const __UINT_FAST16_MAX__ = __helpers.promoteIntLiteral(c_int, 65535, .decimal);
-pub const UINT_FAST16_FMTo__ = "ho";
-pub const UINT_FAST16_FMTu__ = "hu";
-pub const UINT_FAST16_FMTx__ = "hx";
-pub const UINT_FAST16_FMTX__ = "hX";
-pub const __INT_LEAST32_TYPE__ = c_int;
-pub const __INT_LEAST32_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __INT_LEAST32_WIDTH__ = @as(c_int, 32);
-pub const INT_LEAST32_FMTd__ = "d";
-pub const INT_LEAST32_FMTi__ = "i";
-pub const __UINT_LEAST32_TYPE__ = c_uint;
-pub const __UINT_LEAST32_MAX__ = __helpers.promoteIntLiteral(c_uint, 4294967295, .decimal);
-pub const UINT_LEAST32_FMTo__ = "o";
-pub const UINT_LEAST32_FMTu__ = "u";
-pub const UINT_LEAST32_FMTx__ = "x";
-pub const UINT_LEAST32_FMTX__ = "X";
-pub const __INT_FAST32_TYPE__ = c_int;
-pub const __INT_FAST32_MAX__ = __helpers.promoteIntLiteral(c_int, 2147483647, .decimal);
-pub const __INT_FAST32_WIDTH__ = @as(c_int, 32);
-pub const INT_FAST32_FMTd__ = "d";
-pub const INT_FAST32_FMTi__ = "i";
-pub const __UINT_FAST32_TYPE__ = c_uint;
-pub const __UINT_FAST32_MAX__ = __helpers.promoteIntLiteral(c_uint, 4294967295, .decimal);
-pub const UINT_FAST32_FMTo__ = "o";
-pub const UINT_FAST32_FMTu__ = "u";
-pub const UINT_FAST32_FMTx__ = "x";
-pub const UINT_FAST32_FMTX__ = "X";
-pub const __INT_LEAST64_TYPE__ = c_long;
-pub const __INT_LEAST64_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __INT_LEAST64_WIDTH__ = @as(c_int, 64);
-pub const INT_LEAST64_FMTd__ = "ld";
-pub const INT_LEAST64_FMTi__ = "li";
-pub const __UINT_LEAST64_TYPE__ = c_ulong;
-pub const __UINT_LEAST64_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const UINT_LEAST64_FMTo__ = "lo";
-pub const UINT_LEAST64_FMTu__ = "lu";
-pub const UINT_LEAST64_FMTx__ = "lx";
-pub const UINT_LEAST64_FMTX__ = "lX";
-pub const __INT_FAST64_TYPE__ = c_long;
-pub const __INT_FAST64_MAX__ = __helpers.promoteIntLiteral(c_long, 9223372036854775807, .decimal);
-pub const __INT_FAST64_WIDTH__ = @as(c_int, 64);
-pub const INT_FAST64_FMTd__ = "ld";
-pub const INT_FAST64_FMTi__ = "li";
-pub const __UINT_FAST64_TYPE__ = c_ulong;
-pub const __UINT_FAST64_MAX__ = __helpers.promoteIntLiteral(c_ulong, 18446744073709551615, .decimal);
-pub const UINT_FAST64_FMTo__ = "lo";
-pub const UINT_FAST64_FMTu__ = "lu";
-pub const UINT_FAST64_FMTx__ = "lx";
-pub const UINT_FAST64_FMTX__ = "lX";
-pub const __FLT16_DENORM_MIN__ = @as(f16, 5.9604644775390625e-8);
-pub const __FLT16_HAS_DENORM__ = "";
-pub const __FLT16_DIG__ = @as(c_int, 3);
-pub const __FLT16_DECIMAL_DIG__ = @as(c_int, 5);
-pub const __FLT16_EPSILON__ = @as(f16, 9.765625e-4);
-pub const __FLT16_HAS_INFINITY__ = "";
-pub const __FLT16_HAS_QUIET_NAN__ = "";
-pub const __FLT16_MANT_DIG__ = @as(c_int, 11);
-pub const __FLT16_MAX_10_EXP__ = @as(c_int, 4);
-pub const __FLT16_MAX_EXP__ = @as(c_int, 16);
-pub const __FLT16_MAX__ = @as(f16, 6.5504e+4);
-pub const __FLT16_MIN_10_EXP__ = -@as(c_int, 4);
-pub const __FLT16_MIN_EXP__ = -@as(c_int, 13);
-pub const __FLT16_MIN__ = @as(f16, 6.103515625e-5);
-pub const __FLT_DENORM_MIN__ = @as(f32, 1.40129846e-45);
-pub const __FLT_HAS_DENORM__ = "";
-pub const __FLT_DIG__ = @as(c_int, 6);
-pub const __FLT_DECIMAL_DIG__ = @as(c_int, 9);
-pub const __FLT_EPSILON__ = @as(f32, 1.19209290e-7);
-pub const __FLT_HAS_INFINITY__ = "";
-pub const __FLT_HAS_QUIET_NAN__ = "";
-pub const __FLT_MANT_DIG__ = @as(c_int, 24);
-pub const __FLT_MAX_10_EXP__ = @as(c_int, 38);
-pub const __FLT_MAX_EXP__ = @as(c_int, 128);
-pub const __FLT_MAX__ = @as(f32, 3.40282347e+38);
-pub const __FLT_MIN_10_EXP__ = -@as(c_int, 37);
-pub const __FLT_MIN_EXP__ = -@as(c_int, 125);
-pub const __FLT_MIN__ = @as(f32, 1.17549435e-38);
-pub const __DBL_DENORM_MIN__ = @as(f64, 4.9406564584124654e-324);
-pub const __DBL_HAS_DENORM__ = "";
-pub const __DBL_DIG__ = @as(c_int, 15);
-pub const __DBL_DECIMAL_DIG__ = @as(c_int, 17);
-pub const __DBL_EPSILON__ = @as(f64, 2.2204460492503131e-16);
-pub const __DBL_HAS_INFINITY__ = "";
-pub const __DBL_HAS_QUIET_NAN__ = "";
-pub const __DBL_MANT_DIG__ = @as(c_int, 53);
-pub const __DBL_MAX_10_EXP__ = @as(c_int, 308);
-pub const __DBL_MAX_EXP__ = @as(c_int, 1024);
-pub const __DBL_MAX__ = @as(f64, 1.7976931348623157e+308);
-pub const __DBL_MIN_10_EXP__ = -@as(c_int, 307);
-pub const __DBL_MIN_EXP__ = -@as(c_int, 1021);
-pub const __DBL_MIN__ = @as(f64, 2.2250738585072014e-308);
-pub const __LDBL_DENORM_MIN__ = @as(c_longdouble, 3.64519953188247460253e-4951);
-pub const __LDBL_HAS_DENORM__ = "";
-pub const __LDBL_DIG__ = @as(c_int, 18);
-pub const __LDBL_DECIMAL_DIG__ = @as(c_int, 21);
-pub const __LDBL_EPSILON__ = @as(c_longdouble, 1.08420217248550443401e-19);
-pub const __LDBL_HAS_INFINITY__ = "";
-pub const __LDBL_HAS_QUIET_NAN__ = "";
-pub const __LDBL_MANT_DIG__ = @as(c_int, 64);
-pub const __LDBL_MAX_10_EXP__ = @as(c_int, 4932);
-pub const __LDBL_MAX_EXP__ = @as(c_int, 16384);
-pub const __LDBL_MAX__ = @as(c_longdouble, 1.18973149535723176502e+4932);
-pub const __LDBL_MIN_10_EXP__ = -@as(c_int, 4931);
-pub const __LDBL_MIN_EXP__ = -@as(c_int, 16381);
-pub const __LDBL_MIN__ = @as(c_longdouble, 3.36210314311209350626e-4932);
-pub const __FLT_EVAL_METHOD__ = @as(c_int, 0);
-pub const __FLT_RADIX__ = @as(c_int, 2);
-pub const __DECIMAL_DIG__ = __LDBL_DECIMAL_DIG__;
-pub const JS_WRAPPER_H = "";
-pub const __STDC_VERSION_STDDEF_H__ = @as(c_long, 202311);
-pub const NULL = __helpers.cast(?*anyopaque, @as(c_int, 0));
-pub const offsetof = @compileError("unable to translate macro: undefined identifier `__builtin_offsetof`"); // /opt/zig-x86_64-linux-0.16.0-dev.732+2f3234c76/lib/compiler/aro/include/stddef.h:18:9
+pub inline fn js_app_new(width: c_int, height: c_int) ?*js_app {
+    return quickjs_raw.js_app_new(width, height);
+}
+
+pub inline fn js_app_free(app: ?*js_app) void {
+    quickjs_raw.js_app_free(app);
+}
+
+pub inline fn js_app_eval_file(app: ?*js_app, path: [*c]const u8) c_int {
+    return quickjs_raw.js_app_eval_file(app, path);
+}
+
+pub inline fn js_app_eval_module_file(app: ?*js_app, path: [*c]const u8) c_int {
+    return quickjs_raw.js_app_eval_module_file(app, path);
+}
+
+pub inline fn js_app_eval_code(app: ?*js_app, code: [*c]const u8, filename: [*c]const u8, is_module: c_int) c_int {
+    return quickjs_raw.js_app_eval_code(app, code, filename, is_module);
+}
+
+pub inline fn js_app_eval_prelude(app: ?*js_app, code: [*c]const u8, filename: [*c]const u8, is_module: c_int) c_int {
+    return quickjs_raw.js_app_eval_prelude(app, code, filename, is_module);
+}
+
+pub inline fn js_app_eval_prelude_file(app: ?*js_app, path: [*c]const u8, is_module: c_int) c_int {
+    return quickjs_raw.js_app_eval_prelude_file(app, path, is_module);
+}
+
+pub inline fn js_app_run_loop(app: ?*js_app) void {
+    quickjs_raw.js_app_run_loop(app);
+}
+
+pub inline fn js_app_execute_jobs(app: ?*js_app, max_jobs: c_int) c_int {
+    return quickjs_raw.js_app_execute_jobs(app, max_jobs);
+}
+
+pub inline fn js_app_last_exception(app: ?*js_app, out_buf: [*c]u8, out_buf_len: usize) c_int {
+    return quickjs_raw.js_app_last_exception(app, out_buf, out_buf_len);
+}
+
+pub inline fn js_app_call_global(app: ?*js_app, func_name: [*c]const u8, argv: [*c]const [*c]const u8, argc: c_int, out_buf: [*c]u8, out_buf_len: usize) c_int {
+    return quickjs_raw.js_app_call_global(app, func_name, argv, argc, out_buf, out_buf_len);
+}
+
+pub inline fn js_app_get_context(app: ?*js_app) ?*anyopaque {
+    return quickjs_raw.js_app_get_context(app);
+}
+
+pub inline fn JS_GetGlobalObject(ctx: *JSContext) JSValue {
+    return quickjs_raw.zjs_get_global_object(ctx);
+}
+
+pub inline fn JS_GetPropertyStr(ctx: *JSContext, obj: JSValueConst, prop: [*c]const u8) JSValue {
+    return quickjs_raw.zjs_get_property_str(ctx, obj, prop);
+}
+
+pub inline fn JS_IsException(value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_exception(value);
+}
+
+pub inline fn JS_IsFunction(ctx: *JSContext, value: JSValueConst) bool {
+    return quickjs_raw.zjs_is_function(ctx, value);
+}
+
+pub inline fn JS_NewObject(ctx: *JSContext) JSValue {
+    return quickjs_raw.zjs_new_object(ctx);
+}
+
+pub inline fn JS_NewFloat64(ctx: *JSContext, value: f64) JSValue {
+    return quickjs_raw.zjs_new_float64(ctx, value);
+}
+
+pub inline fn JS_SetPropertyStr(ctx: *JSContext, obj: JSValueConst, prop: [*c]const u8, value: JSValue) c_int {
+    return quickjs_raw.zjs_set_property_str(ctx, obj, prop, value);
+}
+
+pub inline fn JS_Call(ctx: *JSContext, func: JSValueConst, this_obj: JSValueConst, argc: c_int, argv: [*c]JSValueConst) JSValue {
+    return quickjs_raw.zjs_call(ctx, func, this_obj, argc, argv);
+}
+
+pub inline fn JS_ToFloat64(ctx: *JSContext, out_value: *f64, value: JSValueConst) c_int {
+    return quickjs_raw.zjs_to_float64(ctx, out_value, value);
+}
+
+pub inline fn JS_FreeValue(ctx: *JSContext, value: JSValue) void {
+    quickjs_raw.zjs_free_value(ctx, value);
+}
+
+pub inline fn asValueConst(value: JSValue) JSValueConst {
+    return value;
+}

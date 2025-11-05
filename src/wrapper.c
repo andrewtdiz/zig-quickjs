@@ -241,6 +241,11 @@ int js_app_call_global(js_app* app,
     return 0;
 }
 
+void* js_app_get_context(js_app* app) {
+    if (!app) return NULL;
+    return app->ctx;
+}
+
 void js_app_free(js_app* app) {
     if (!app) return;
     JSRuntime *rt = app->rt;

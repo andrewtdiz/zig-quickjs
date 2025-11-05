@@ -38,6 +38,7 @@ int js_app_execute_jobs(js_app* app, int max_jobs);
 // Returns 0 on success and writes a NUL-terminated string to out_buf.
 // Returns -1 if no exception is present.
 int js_app_last_exception(js_app* app, char* out_buf, size_t out_buf_len);
+void* js_app_get_context(js_app* app);
 
 // Call into JS
 // Call a global function by name with string arguments. The result is

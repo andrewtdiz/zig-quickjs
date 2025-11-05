@@ -66,6 +66,7 @@ pub fn build(b: *std.Build) void {
     wrapper_mod.addCSourceFiles(.{
         .files = &.{
             "src/wrapper.c",
+            "src/zquickjs.c",
         },
         .flags = c_flags.items,
     });
