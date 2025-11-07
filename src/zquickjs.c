@@ -89,3 +89,15 @@ JSValue zjs_new_c_function(JSContext *ctx, JSCFunction *func, const char *name, 
 JSValue zjs_make_undefined(void) {
     return JS_UNDEFINED;
 }
+
+JSValue zjs_eval(JSContext *ctx, const char *code, size_t len, const char *filename, int flags) {
+    return JS_Eval(ctx, code, len, filename, flags);
+}
+
+const char *zjs_to_cstring_len(JSContext *ctx, size_t *len, JSValueConst value) {
+    return JS_ToCStringLen(ctx, len, value);
+}
+
+void zjs_free_cstring(JSContext *ctx, const char *ptr) {
+    JS_FreeCString(ctx, ptr);
+}

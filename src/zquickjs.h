@@ -2,6 +2,7 @@
 #define ZIG_QUICKJS_API_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "quickjs.h"
 
@@ -31,6 +32,9 @@ int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value);
 void zjs_free_value(JSContext *ctx, JSValue value);
 JSValue zjs_new_c_function(JSContext *ctx, JSCFunction *func, const char *name, int length);
 JSValue zjs_make_undefined(void);
+JSValue zjs_eval(JSContext *ctx, const char *code, size_t len, const char *filename, int flags);
+const char *zjs_to_cstring_len(JSContext *ctx, size_t *len, JSValueConst value);
+void zjs_free_cstring(JSContext *ctx, const char *ptr);
 
 #ifdef __cplusplus
 }

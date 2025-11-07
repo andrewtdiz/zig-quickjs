@@ -143,6 +143,19 @@ pub inline fn JS_GetUndefined() JSValue {
     return quickjs_raw.zjs_make_undefined();
 }
 
+pub inline fn JS_Eval(ctx: *JSContext, code: [*c]const u8, len: usize, filename: [*c]const u8, flags: c_int) JSValue {
+    return quickjs_raw.zjs_eval(ctx, code, len, filename, flags);
+}
+
+pub inline fn JS_ToCStringLen(ctx: *JSContext, out_len: *usize, value: JSValueConst) ?[*c]const u8 {
+    const ptr = quickjs_raw.zjs_to_cstring_len(ctx, out_len, value);
+    return if (ptr == null) null else ptr;
+}
+
+pub inline fn JS_FreeCString(ctx: *JSContext, ptr: [*c]const u8) void {
+    quickjs_raw.zjs_free_cstring(ctx, ptr);
+}
+
 pub inline fn asValueConst(value: JSValue) JSValueConst {
     return value;
 }
