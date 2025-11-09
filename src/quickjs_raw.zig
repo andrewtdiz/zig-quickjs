@@ -49,9 +49,15 @@ pub extern "c" fn zjs_new_string_len(ctx: *JSContext, data: [*c]const u8, len: u
 pub extern "c" fn zjs_set_property_str(ctx: *JSContext, obj: JSValueConst, prop: [*c]const u8, value: JSValue) c_int;
 pub extern "c" fn zjs_call(ctx: *JSContext, func: JSValueConst, this_obj: JSValueConst, argc: c_int, argv: [*c]JSValueConst) JSValue;
 pub extern "c" fn zjs_to_float64(ctx: *JSContext, out_value: *f64, value: JSValueConst) c_int;
+pub extern "c" fn zjs_to_uint32(ctx: *JSContext, out_value: *u32, value: JSValueConst) c_int;
 pub extern "c" fn zjs_free_value(ctx: *JSContext, value: JSValue) void;
 pub extern "c" fn zjs_new_c_function(ctx: *JSContext, func: *const JSCFunction, name: [*c]const u8, length: c_int) JSValue;
 pub extern "c" fn zjs_make_undefined() JSValue;
 pub extern "c" fn zjs_eval(ctx: *JSContext, code: [*c]const u8, len: usize, filename: [*c]const u8, flags: c_int) JSValue;
 pub extern "c" fn zjs_to_cstring_len(ctx: *JSContext, out_len: *usize, value: JSValueConst) [*c]const u8;
 pub extern "c" fn zjs_free_cstring(ctx: *JSContext, ptr: [*c]const u8) void;
+pub extern "c" fn zjs_update_stack_top(rt: *JSRuntime) void;
+pub extern "c" fn JS_GetRuntime(ctx: *JSContext) *JSRuntime;
+pub extern "c" fn JS_SetMaxStackSize(rt: *JSRuntime, stack_size: usize) void;
+pub extern "c" fn JS_GetStackPeakSize(rt: *JSRuntime) usize;
+pub extern "c" fn JS_GetMaxStackSize(rt: *JSRuntime) usize;

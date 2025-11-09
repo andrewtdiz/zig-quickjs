@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "quickjs.h"
 
@@ -29,12 +30,14 @@ JSValue zjs_new_int32(JSContext *ctx, int32_t value);
 JSValue zjs_new_bool(JSContext *ctx, bool value);
 JSValue zjs_new_string_len(JSContext *ctx, const char *data, size_t len);
 int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value);
+int zjs_to_uint32(JSContext *ctx, uint32_t *out_value, JSValueConst value);
 void zjs_free_value(JSContext *ctx, JSValue value);
 JSValue zjs_new_c_function(JSContext *ctx, JSCFunction *func, const char *name, int length);
 JSValue zjs_make_undefined(void);
 JSValue zjs_eval(JSContext *ctx, const char *code, size_t len, const char *filename, int flags);
 const char *zjs_to_cstring_len(JSContext *ctx, size_t *len, JSValueConst value);
 void zjs_free_cstring(JSContext *ctx, const char *ptr);
+void zjs_update_stack_top(JSRuntime *rt);
 
 #ifdef __cplusplus
 }

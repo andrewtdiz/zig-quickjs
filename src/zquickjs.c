@@ -78,6 +78,10 @@ int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value) {
     return JS_ToFloat64(ctx, out_value, value);
 }
 
+int zjs_to_uint32(JSContext *ctx, uint32_t *out_value, JSValueConst value) {
+    return JS_ToUint32(ctx, out_value, value);
+}
+
 void zjs_free_value(JSContext *ctx, JSValue value) {
     JS_FreeValue(ctx, value);
 }
@@ -100,4 +104,8 @@ const char *zjs_to_cstring_len(JSContext *ctx, size_t *len, JSValueConst value) 
 
 void zjs_free_cstring(JSContext *ctx, const char *ptr) {
     JS_FreeCString(ctx, ptr);
+}
+
+void zjs_update_stack_top(JSRuntime *rt) {
+    JS_UpdateStackTop(rt);
 }

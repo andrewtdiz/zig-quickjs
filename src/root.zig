@@ -119,6 +119,10 @@ pub inline fn JS_ToFloat64(ctx: *JSContext, out_value: *f64, value: JSValueConst
     return quickjs_raw.zjs_to_float64(ctx, out_value, value);
 }
 
+pub inline fn JS_ToUint32(ctx: *JSContext, out_value: *u32, value: JSValueConst) c_int {
+    return quickjs_raw.zjs_to_uint32(ctx, out_value, value);
+}
+
 pub inline fn JS_NewInt32(ctx: *JSContext, value: i32) JSValue {
     return quickjs_raw.zjs_new_int32(ctx, value);
 }
@@ -154,6 +158,26 @@ pub inline fn JS_ToCStringLen(ctx: *JSContext, out_len: *usize, value: JSValueCo
 
 pub inline fn JS_FreeCString(ctx: *JSContext, ptr: [*c]const u8) void {
     quickjs_raw.zjs_free_cstring(ctx, ptr);
+}
+
+pub inline fn JS_GetRuntime(ctx: *JSContext) *JSRuntime {
+    return quickjs_raw.JS_GetRuntime(ctx);
+}
+
+pub inline fn JS_SetMaxStackSize(rt: *JSRuntime, stack_size: usize) void {
+    quickjs_raw.JS_SetMaxStackSize(rt, stack_size);
+}
+
+pub inline fn JS_UpdateStackTop(rt: *JSRuntime) void {
+    quickjs_raw.zjs_update_stack_top(rt);
+}
+
+pub inline fn JS_GetStackPeakSize(rt: *JSRuntime) usize {
+    return quickjs_raw.JS_GetStackPeakSize(rt);
+}
+
+pub inline fn JS_GetMaxStackSize(rt: *JSRuntime) usize {
+    return quickjs_raw.JS_GetMaxStackSize(rt);
 }
 
 pub inline fn asValueConst(value: JSValue) JSValueConst {
