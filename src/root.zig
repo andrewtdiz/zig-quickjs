@@ -123,8 +123,16 @@ pub inline fn JS_ToUint32(ctx: *JSContext, out_value: *u32, value: JSValueConst)
     return quickjs_raw.zjs_to_uint32(ctx, out_value, value);
 }
 
+pub inline fn JS_ToInt32(ctx: *JSContext, out_value: *i32, value: JSValueConst) c_int {
+    return quickjs_raw.zjs_to_int32(ctx, out_value, value);
+}
+
 pub inline fn JS_NewInt32(ctx: *JSContext, value: i32) JSValue {
     return quickjs_raw.zjs_new_int32(ctx, value);
+}
+
+pub inline fn JS_NewInt64(ctx: *JSContext, value: i64) JSValue {
+    return quickjs_raw.zjs_new_int64(ctx, value);
 }
 
 pub inline fn JS_NewBool(ctx: *JSContext, value: bool) JSValue {

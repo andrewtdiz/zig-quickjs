@@ -58,6 +58,10 @@ JSValue zjs_new_int32(JSContext *ctx, int32_t value) {
     return JS_NewInt32(ctx, value);
 }
 
+JSValue zjs_new_int64(JSContext *ctx, int64_t value) {
+    return JS_NewInt64(ctx, value);
+}
+
 JSValue zjs_new_bool(JSContext *ctx, bool value) {
     return JS_NewBool(ctx, value);
 }
@@ -80,6 +84,10 @@ int zjs_to_float64(JSContext *ctx, double *out_value, JSValueConst value) {
 
 int zjs_to_uint32(JSContext *ctx, uint32_t *out_value, JSValueConst value) {
     return JS_ToUint32(ctx, out_value, value);
+}
+
+int zjs_to_int32(JSContext *ctx, int32_t *out_value, JSValueConst value) {
+    return JS_ToInt32(ctx, out_value, value);
 }
 
 void zjs_free_value(JSContext *ctx, JSValue value) {
