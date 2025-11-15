@@ -188,6 +188,10 @@ pub inline fn JS_GetMaxStackSize(rt: *JSRuntime) usize {
     return quickjs_raw.JS_GetMaxStackSize(rt);
 }
 
+pub inline fn JS_DupValue(ctx: *JSContext, value: JSValueConst) JSValue {
+    return quickjs_raw.JS_DupValue(ctx, value);
+}
+
 pub inline fn asValueConst(value: JSValue) JSValueConst {
     return value;
 }

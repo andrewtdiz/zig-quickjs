@@ -63,3 +63,4 @@ pub extern "c" fn JS_GetRuntime(ctx: *JSContext) *JSRuntime;
 pub extern "c" fn JS_SetMaxStackSize(rt: *JSRuntime, stack_size: usize) void;
 pub extern "c" fn JS_GetStackPeakSize(rt: *JSRuntime) usize;
 pub extern "c" fn JS_GetMaxStackSize(rt: *JSRuntime) usize;
+pub extern "c" fn JS_DupValue(ctx: *JSContext, value: JSValueConst) JSValue;
